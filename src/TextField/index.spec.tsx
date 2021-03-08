@@ -12,6 +12,7 @@ import { TextField } from '.';
 
 describe('<TextField />', () => {
   const promise = Promise.resolve();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmitMock = jest.fn((_) => promise);
   let element: RenderResult;
   let textField: HTMLElement;
