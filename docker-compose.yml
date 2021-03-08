@@ -11,6 +11,14 @@ services:
     <<: *base
     command: npm install
 
+  lint:
+    <<: *base
+    command: npm run lint
+
+  test:
+    <<: *base
+    command: npm test
+
   compile:
     <<: *base
     command: npm run compile
