@@ -1,8 +1,8 @@
 name: npm-publish
 on:
-  release:
-    types:
-      - published
+  push:
+    branches:
+      - main
 
 jobs:
   npm-publish:
@@ -30,8 +30,4 @@ jobs:
         run: npm run compile
 
       - name: NPM publish
-        run: |
-          npm config set @brainstationau:registry https://registry.npmjs.org/
-          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_AUTH_TOKEN }}
-          npm publish
-          npm config delete //registry.npmjs.org/:_authToken
+        run: ./publish.sh
