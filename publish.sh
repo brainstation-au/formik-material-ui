@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 message=$(git log -1 --pretty=%B)
-version=$(node ./version.js $message)
+version=$(node ./version.js "$message")
 
 if [[ "$version" == "null" ]]; then
   echo "No new version to publish."
