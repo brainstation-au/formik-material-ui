@@ -1,8 +1,8 @@
-name: npm-publish
+name: ci
 on:
-  release:
-    types:
-      - published
+  push:
+    branches-ignore:
+      - main
 
 jobs:
   npm-publish:
@@ -28,10 +28,3 @@ jobs:
 
       - name: Compile
         run: npm run compile
-
-      - name: NPM publish
-        run: |
-          npm config set @brainstationau:registry https://registry.npmjs.org/
-          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_AUTH_TOKEN }}
-          npm publish
-          npm config delete //registry.npmjs.org/:_authToken
