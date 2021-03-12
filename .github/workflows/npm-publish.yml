@@ -42,7 +42,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          npm version $version
+          tag=$(npm version $version)
+          git tag -a $tag -m "Publishing new version to NPM"
 
       # - name: Push changes
       #   uses: ad-m/github-push-action@master
