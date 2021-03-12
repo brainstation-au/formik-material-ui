@@ -43,13 +43,11 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm version ${{ steps.release-commit.outputs.version }}
-          git describe
-          # echo "::set-output name=tag::$(git describe)"
 
-      # - name: Push changes
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: NPM publish
       #   if: ${{ steps.release-tag.outputs.tag }}
