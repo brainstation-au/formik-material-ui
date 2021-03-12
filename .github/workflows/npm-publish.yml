@@ -42,9 +42,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          npm version $version
-          cat ./package.json
-          # echo ${GITHUB_REF#refs/*/}
+          npm version ${{ steps.release-commit.outputs.version }}
+          git describe
           # echo "::set-output name=tag::$(git describe)"
 
       # - name: Push changes
