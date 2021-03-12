@@ -38,7 +38,7 @@ jobs:
 
       - name: Add a new release tag
         id: release-tag
-        if: ${{ steps.release-commit.outputs.version != "null" }}
+        if: ${{ steps.release-commit.outputs.version != 'null' }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
