@@ -43,7 +43,8 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm version $version
-          echo "::set-output name=tag::$(git describe)"
+          echo ${GITHUB_REF#refs/*/}
+          # echo "::set-output name=tag::$(git describe)"
 
       # - name: Push changes
       #   uses: ad-m/github-push-action@master
