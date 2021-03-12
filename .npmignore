@@ -7,3 +7,4 @@ src/
 docker-compose.yml
 jest.config.js
 tsconfig*
+version.js
