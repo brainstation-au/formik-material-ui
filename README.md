@@ -19,13 +19,18 @@ Each of the components in this package uses [useField hook from formik](https://
 
 **Base API:** [TextField](https://material-ui.com/api/text-field/)
 
-**Exclusions:** `error`, `onChange`, `onBlur`, `value` *(formik to populate)*
+**Props:** All props from [TextField](https://material-ui.com/api/text-field/#props)
 
-**Required:** `name` *(to bind with formik context)*
+**Excluded props:** `error`, `onChange`, `onBlur`, `value` *(formik to populate)*
+
+**Required props:** `name` *(to bind with formik context)*
 
 **Example:**
 
 ```js
+import { Form, Formik } from 'formik';
+import { TextField } from '@brainstationau/formik-material-ui';
+...
 <Formik
   initialValues={{ name: '' }}
   onSubmit={(values) => onSubmitMock(values)}
@@ -44,4 +49,5 @@ Each of the components in this package uses [useField hook from formik](https://
     </Form>
   )}
 </Formik>
+...
 ```
