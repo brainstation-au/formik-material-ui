@@ -5,6 +5,7 @@ This project extends [Material-UI](https://material-ui.com/) form field componen
 Each of the components in this package uses [useField hook from formik](https://formik.org/docs/api/useField), so they must be used within a [formik context](https://formik.org/docs/api/formik).
 
 ## Dependencies
+
 ```json
 {
   "@material-ui/core": ">= 4",
@@ -15,10 +16,15 @@ Each of the components in this package uses [useField hook from formik](https://
 ```
 
 ## TextField
+
 **Base API:** [TextField](https://material-ui.com/api/text-field/)
+
 **Exclusions:** `error`, `onChange`, `onBlur`, `value` *(formik to populate)*
+
 **Required:** `name` *(to bind with formik context)*
+
 **Example:**
+
 ```js
 <Formik
   initialValues={{ name: '' }}
