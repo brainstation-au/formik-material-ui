@@ -21,7 +21,8 @@ Each of the components in this package uses [useField hook from formik](https://
 
 **Props:** All props from [TextField](https://material-ui.com/api/text-field/#props)
 
-**Excluded props:** `error`, `onChange`, `onBlur`, `value` *(formik to populate)*
+**Excluded props:** `error`, `onChange`, `onBlur`, `value`
+*(formik populates these props in actual Material-UI TextField component. Even if you provide any, they will get overriden by the formik ones.)*
 
 **Required props:** `name` *(to bind with formik context)*
 
