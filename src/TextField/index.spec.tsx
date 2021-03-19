@@ -58,7 +58,7 @@ describe('<TextField />', () => {
 
     test('text field renders input with type text', () => {
       expect(textField.getAttribute('type')).toBe('text');
-      expect(textField.getAttribute('value')).toEqual('');
+      expect(textField).toHaveValue('');
     });
 
     test('text field renders helper text', () => {

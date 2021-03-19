@@ -28,7 +28,7 @@ Each of the components in this package uses [useField hook from formik](https://
 
 **Example:**
 
-```js
+```typescript
 import { Form, Formik } from 'formik';
 import { TextField } from '@brainstationau/formik-material-ui';
 ...
