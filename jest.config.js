@@ -4,4 +4,5 @@ module.exports = {
   verbose: true,
   collectCoverage: true,
   roots: ['src'],
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.js'],
 };

@@ -5,6 +5,7 @@ src/
 .eslintignore
 .eslintrc
 docker-compose.yml
+jest-setup.js
 jest.config.js
 tsconfig*
 version.js
