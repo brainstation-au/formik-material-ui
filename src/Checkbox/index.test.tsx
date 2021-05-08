@@ -8,7 +8,7 @@ import {
 import { Formik, Form } from 'formik';
 import React from 'react';
 import * as yup from 'yup';
-import { Checkbox } from './Checkbox';
+import { Checkbox } from '.';
 
 describe('<Checkbox />', () => {
   const promise = Promise.resolve();
