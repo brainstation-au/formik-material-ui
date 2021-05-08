@@ -1,6 +1,7 @@
+import MomentUtils from '@date-io/moment';
 import {
   DatePicker as MuiDatePicker,
-  DatePickerProps as MuiDatePickerProps,
+  DatePickerProps as MuiDatePickerProps, MuiPickersUtilsProvider
 } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { useField } from 'formik';
@@ -31,14 +32,16 @@ export const DatePicker: FunctionComponent<DatePickerProps> = ({
   const formError = meta.touched && !!meta.error;
 
   return (
-    <MuiDatePicker
-      value={initialValue}
-      onChange={datepickerOnChange}
-      format={format}
-      name={name}
-      helperText={formError ? meta.error : helperText}
-      error={formError}
-      {...otherProps}
-    />
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <MuiDatePicker
+        value={initialValue}
+        onChange={datepickerOnChange}
+        format={format}
+        name={name}
+        helperText={formError ? meta.error : helperText}
+        error={formError}
+        {...otherProps}
+      />
+    </MuiPickersUtilsProvider>
   );
 };
