@@ -1,4 +1,5 @@
 .github/
+.vscode/
 coverage/
 node_modules/
 src/
@@ -7,5 +8,7 @@ src/
 docker-compose.yml
 jest-setup.js
 jest.config.js
+LICENSE
+README.md
 tsconfig*
 version.js
