@@ -15,6 +15,10 @@ Each of the components in this package uses [useField hook from formik](https://
 }
 ```
 
+## Demo
+
+Please find demos [here](https://formik-material-ui.brainstation.com.au/).
+
 ## TextField
 
 **Base API:** [TextField](https://material-ui.com/api/text-field/)
@@ -22,9 +26,9 @@ Each of the components in this package uses [useField hook from formik](https://
 **Props:** All props from [TextField](https://material-ui.com/api/text-field/#props)
 
 **Excluded props:** `error`, `onChange`, `onBlur`, `value`
-*(formik populates these props in actual Material-UI TextField component. Even if you provide any, they will get overriden by the formik ones.)*
+_(formik populates these props in actual Material-UI TextField component. Even if you provide any, they will get overriden by the formik ones.)_
 
-**Required props:** `name` *(to bind with formik context)*
+**Required props:** `name` _(to bind with formik context)_
 
 **Example:**
 
