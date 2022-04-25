@@ -5,8 +5,8 @@ import {
   InputLabel,
   NativeSelect,
   NativeSelectProps,
-} from '@material-ui/core';
-import { NativeSelectInputProps } from '@material-ui/core/NativeSelect/NativeSelectInput';
+} from '@mui/material';
+import { NativeSelectInputProps } from '@mui/material/NativeSelect/NativeSelectInput';
 import { useField } from 'formik';
 import React, { FunctionComponent } from 'react';
 

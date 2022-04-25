@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   sh: &base
-    image: node:14-alpine
+    image: node:lts-alpine
     volumes:
       - .:/opt/code
     working_dir: /opt/code

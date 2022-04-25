@@ -1,10 +1,10 @@
 import {
-  act,
   fireEvent,
   render,
-  RenderResult,
+  screen,
   waitFor,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Formik, Form } from 'formik';
 import React from 'react';
 import * as yup from 'yup';
@@ -12,6 +12,7 @@ import { Checkboxes, CheckboxOption } from '.';
 
 describe('<Checkboxes />', () => {
   const promise = Promise.resolve();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmitMock = jest.fn((_) => promise);
   const options: CheckboxOption[] = [
     {
@@ -27,11 +28,11 @@ describe('<Checkboxes />', () => {
       value: 'grapes',
     },
   ];
-  let element: RenderResult;
   let button: HTMLElement;
   let checkboxForApple: HTMLElement;
   let checkboxForAvocado: HTMLElement;
   let checkboxForGrapes: HTMLElement;
+  const user = userEvent.setup();
 
   describe('basic usage', () => {
     type FormValues = { fruits: string[] };
@@ -54,14 +55,12 @@ describe('<Checkboxes />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
+      render(formik);
 
-      checkboxForApple = element.getByLabelText('5 Apples');
-      checkboxForAvocado = element.getByLabelText('2 Avocadoes');
-      checkboxForGrapes = element.getByLabelText('1 kilo of Grapes');
-      button = element.getByRole('button');
+      checkboxForApple = screen.getByLabelText('5 Apples');
+      checkboxForAvocado = screen.getByLabelText('2 Avocadoes');
+      checkboxForGrapes = screen.getByLabelText('1 kilo of Grapes');
+      button = screen.getByRole('button');
     });
 
     afterEach(() => {
@@ -75,50 +74,41 @@ describe('<Checkboxes />', () => {
     });
 
     test('form submission with initial state', async () => {
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith(initialValue);
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith(initialValue);
+      });
     });
 
     test('check the box for avocado and submit the form', async () => {
-      act(() => {
-        fireEvent.click(checkboxForAvocado);
-      });
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(checkboxForAvocado);
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(checkboxForApple).toBeChecked();
-      expect(checkboxForAvocado).toBeChecked();
-      expect(checkboxForGrapes).toBeChecked();
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith({
-        fruits: ['apple', 'grapes', 'avocado'],
+      await waitFor(() => {
+        expect(checkboxForApple).toBeChecked();
+        expect(checkboxForAvocado).toBeChecked();
+        expect(checkboxForGrapes).toBeChecked();
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith({
+          fruits: ['apple', 'grapes', 'avocado'],
+        });
       });
     });
 
     test('uncheck apple and grapes', async () => {
-      act(() => {
-        fireEvent.click(checkboxForApple);
-      });
-      act(() => {
-        fireEvent.click(checkboxForGrapes);
-      });
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(checkboxForApple);
+      await user.click(checkboxForGrapes);
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(checkboxForApple).not.toBeChecked();
-      expect(checkboxForAvocado).not.toBeChecked();
-      expect(checkboxForGrapes).not.toBeChecked();
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith({ fruits: [] });
+      await waitFor(() => {
+        expect(checkboxForApple).not.toBeChecked();
+        expect(checkboxForAvocado).not.toBeChecked();
+        expect(checkboxForGrapes).not.toBeChecked();
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith({ fruits: [] });
+      });
     });
   });
 
@@ -152,15 +142,13 @@ describe('<Checkboxes />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
+      render(formik);
 
-      checkboxForApple = element.getByLabelText('5 Apples');
-      checkboxForAvocado = element.getByLabelText('2 Avocadoes');
-      checkboxForGrapes = element.getByLabelText('1 kilo of Grapes');
-      helperText = element.getByText(defaultHelpMessage);
-      button = element.getByRole('button');
+      checkboxForApple = screen.getByLabelText('5 Apples');
+      checkboxForAvocado = screen.getByLabelText('2 Avocadoes');
+      checkboxForGrapes = screen.getByLabelText('1 kilo of Grapes');
+      helperText = screen.getByText(defaultHelpMessage);
+      button = screen.getByRole('button');
     });
 
     afterEach(() => {
@@ -168,29 +156,27 @@ describe('<Checkboxes />', () => {
     });
 
     test('No error state initially', () => {
-      expect(helperText?.className).not.toContain('error');
+      expect(helperText.className).not.toContain('error');
     });
 
     test('touching any box should display error', async () => {
-      act(() => {
-        fireEvent.blur(checkboxForApple);
-      });
+      fireEvent.blur(checkboxForApple);
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(0);
-      expect(helperText).toContainHTML(errorMessage);
-      expect(helperText?.className).toContain('error');
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(0);
+        expect(helperText).toContainHTML(errorMessage);
+        expect(helperText?.className).toContain('error');
+      });
     });
 
     test('submit form without checking any box should display error', async () => {
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(0);
-      expect(helperText).toContainHTML(errorMessage);
-      expect(helperText?.className).toContain('error');
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(0);
+        expect(helperText).toContainHTML(errorMessage);
+        expect(helperText?.className).toContain('error');
+      });
     });
   });
 
@@ -216,14 +202,12 @@ describe('<Checkboxes />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
+      render(formik);
 
-      checkboxForApple = element.getByLabelText('5 Apples');
-      checkboxForAvocado = element.getByLabelText('2 Avocadoes');
-      checkboxForGrapes = element.getByLabelText('1 kilo of Grapes');
-      button = element.getByRole('button');
+      checkboxForApple = screen.getByLabelText('5 Apples');
+      checkboxForAvocado = screen.getByLabelText('2 Avocadoes');
+      checkboxForGrapes = screen.getByLabelText('1 kilo of Grapes');
+      button = screen.getByRole('button');
     });
 
     afterEach(() => {
@@ -234,14 +218,12 @@ describe('<Checkboxes />', () => {
       expect(checkboxForApple).toBeDisabled();
       expect(checkboxForAvocado).toBeDisabled();
       expect(checkboxForGrapes).toBeDisabled();
+      await user.click(button);
 
-      act(() => {
-        fireEvent.click(button);
-      });
-
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledWith({
-        fruits: ['apple', 'grapes'],
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledWith({
+          fruits: ['apple', 'grapes'],
+        });
       });
     });
   });

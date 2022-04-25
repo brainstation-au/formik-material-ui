@@ -1,10 +1,9 @@
 import {
-  act,
-  fireEvent,
   render,
-  RenderResult,
+  screen,
   waitFor,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Form, Formik } from 'formik';
 import React from 'react';
 import { RadioGroup, RadioOption } from '.';
@@ -12,8 +11,8 @@ import * as yup from 'yup';
 
 describe('<RadioGroupInFormControl />', () => {
   const promise = Promise.resolve();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmitMock = jest.fn((_) => promise);
-  let element: RenderResult;
   let button: HTMLElement;
   let radioFemale: HTMLElement;
   let radioMale: HTMLElement;
@@ -33,6 +32,7 @@ describe('<RadioGroupInFormControl />', () => {
     },
   ];
   const helperText = 'I am here to help';
+  const user = userEvent.setup();
 
   describe('With basic properties', () => {
     beforeEach(() => {
@@ -57,14 +57,12 @@ describe('<RadioGroupInFormControl />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
+      render(formik);
 
-      radioFemale = element.getByLabelText('Female');
-      radioMale = element.getByLabelText('Male');
-      radioOther = element.getByLabelText('Other');
-      button = element.getByRole('button');
+      radioFemale = screen.getByLabelText('Female');
+      radioMale = screen.getByLabelText('Male');
+      radioOther = screen.getByLabelText('Other');
+      button = screen.getByRole('button');
     });
 
     afterEach(() => {
@@ -72,36 +70,32 @@ describe('<RadioGroupInFormControl />', () => {
     });
 
     test('default rendering', () => {
-      expect(element.getByLabelText('Gender')).toBeTruthy();
-      expect(element.getByText(helperText)).toBeTruthy();
+      expect(screen.getByLabelText('Gender')).toBeTruthy();
+      expect(screen.getByText(helperText)).toBeInTheDocument();
       expect(radioFemale).not.toBeChecked();
       expect(radioMale).toBeChecked();
       expect(radioOther).not.toBeChecked();
     });
 
     test('form submission with initial state', async () => {
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith({ gender: 'male' });
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith({ gender: 'male' });
+      });
     });
 
     test('change selection and submit the form', async () => {
-      act(() => {
-        fireEvent.click(radioFemale);
-      });
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(radioFemale);
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(radioMale).not.toBeChecked();
-      expect(radioFemale).toBeChecked();
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith({ gender: 'female' });
+      await waitFor(() => {
+        expect(radioMale).not.toBeChecked();
+        expect(radioFemale).toBeChecked();
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith({ gender: 'female' });
+      });
     });
   });
 
@@ -134,14 +128,12 @@ describe('<RadioGroupInFormControl />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
+      render(formik);
 
-      radioFemale = element.getByLabelText('Female');
-      radioMale = element.getByLabelText('Male');
-      radioOther = element.getByLabelText('Other');
-      button = element.getByRole('button');
+      radioFemale = screen.getByLabelText('Female');
+      radioMale = screen.getByLabelText('Male');
+      radioOther = screen.getByLabelText('Other');
+      button = screen.getByRole('button');
     });
 
     afterEach(() => {
@@ -155,29 +147,25 @@ describe('<RadioGroupInFormControl />', () => {
     });
 
     test('form submission with initial state', async () => {
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(0);
-      expect(element.getByText('Required').className).toContain('error');
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(0);
+        expect(screen.getByText('Required').className).toContain('error');
+      });
     });
 
     test('choose an invalid option and submit the form', async () => {
-      act(() => {
-        fireEvent.click(radioOther);
-      });
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(radioOther);
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(radioOther).toBeChecked();
-      expect(onSubmitMock).toHaveBeenCalledTimes(0);
-      expect(element.getByText('Choose a valid gender').className).toContain(
-        'error'
-      );
+      await waitFor(() => {
+        expect(radioOther).toBeChecked();
+        expect(onSubmitMock).toHaveBeenCalledTimes(0);
+        expect(screen.getByText('Choose a valid gender').className).toContain(
+          'error'
+        );
+      });
     });
   });
 
@@ -203,14 +191,12 @@ describe('<RadioGroupInFormControl />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
+      render(formik);
 
-      radioFemale = element.getByLabelText('Female');
-      radioMale = element.getByLabelText('Male');
-      radioOther = element.getByLabelText('Other');
-      button = element.getByRole('button');
+      radioFemale = screen.getByLabelText('Female');
+      radioMale = screen.getByLabelText('Male');
+      radioOther = screen.getByLabelText('Other');
+      button = screen.getByRole('button');
     });
 
     afterEach(() => {
@@ -224,13 +210,12 @@ describe('<RadioGroupInFormControl />', () => {
     });
 
     test('form submission with initial state', async () => {
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith({ gender: 'male' });
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith({ gender: 'male' });
+      });
     });
   });
 });

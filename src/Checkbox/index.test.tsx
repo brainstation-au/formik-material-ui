@@ -1,10 +1,9 @@
 import {
-  act,
-  fireEvent,
   render,
-  RenderResult,
+  screen,
   waitFor,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Formik, Form } from 'formik';
 import React from 'react';
 import * as yup from 'yup';
@@ -14,9 +13,7 @@ describe('<Checkbox />', () => {
   const promise = Promise.resolve();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmitMock = jest.fn((_) => promise);
-  let element: RenderResult;
-  let checkbox: HTMLElement;
-  let button: HTMLElement;
+  const user = userEvent.setup();
 
   describe('basic usage', () => {
     type FormValues = { employed: boolean };
@@ -39,12 +36,7 @@ describe('<Checkbox />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
-
-      checkbox = element.getByLabelText('Employment Status');
-      button = element.getByRole('button');
+      render(formik);
     });
 
     afterEach(() => {
@@ -52,53 +44,43 @@ describe('<Checkbox />', () => {
     });
 
     test('it is unchecked visually', () => {
-      expect(checkbox).not.toBeChecked();
+      expect(screen.getByLabelText('Employment Status')).not.toBeChecked();
     });
 
     test('form submission with initial state', async () => {
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(screen.getByRole('button', {name: /submit/i}));
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith(initialValue);
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith(initialValue);
+      });
     });
 
     test('check the box and submit the form', async () => {
-      act(() => {
-        fireEvent.click(checkbox);
-      });
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(screen.getByLabelText('Employment Status'));
+      await user.click(screen.getByRole('button', {name: /submit/i}));
 
-      await waitFor(() => promise);
-      expect(checkbox).toBeChecked();
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith({ employed: true });
+      await waitFor(() => {
+        expect(screen.getByLabelText('Employment Status')).toBeChecked();
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith({ employed: true });
+      });
     });
 
     test('check the box twice and submit the form', async () => {
-      act(() => {
-        fireEvent.click(checkbox);
-      });
-      act(() => {
-        fireEvent.click(checkbox);
-      });
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(screen.getByLabelText('Employment Status'));
+      await user.click(screen.getByLabelText('Employment Status'));
+      await user.click(screen.getByRole('button', {name: /submit/i}));
 
-      await waitFor(() => promise);
-      expect(checkbox).not.toBeChecked();
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith(initialValue);
+      await waitFor(() => {
+        expect(screen.getByLabelText('Employment Status')).not.toBeChecked();
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith(initialValue);
+      });
     });
   });
 
   describe('with validation', () => {
-    let helperText: Element | null;
     const errorMessage = 'Must be selected.';
     const defaultHelpMessage = 'I am here to help';
 
@@ -117,6 +99,7 @@ describe('<Checkbox />', () => {
                 name="employed"
                 label="Employment Status"
                 helperText={defaultHelpMessage}
+                checkboxProps={{ required: true }}
               />
               <button type="button" onClick={submitForm}>
                 Submit
@@ -126,13 +109,7 @@ describe('<Checkbox />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
-
-      checkbox = element.getByLabelText('Employment Status');
-      helperText = element.getByText(defaultHelpMessage);
-      button = element.getByRole('button');
+      render(formik);
     });
 
     afterEach(() => {
@@ -140,18 +117,19 @@ describe('<Checkbox />', () => {
     });
 
     test('No error state initially', () => {
-      expect(helperText?.className).not.toContain('error');
+      expect(screen.getByText(defaultHelpMessage).className).not.toContain('error');
+      expect(screen.getByText(defaultHelpMessage)).toBeInTheDocument();
     });
 
     test('submit form without checking the box', async () => {
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(screen.getByRole('button', {name: /submit/i}));
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(0);
-      expect(helperText).toContainHTML(errorMessage);
-      expect(helperText?.className).toContain('error');
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(0);
+        expect(() => screen.getByText(defaultHelpMessage)).toThrow();
+        expect(screen.getByText(errorMessage)).toBeInTheDocument();
+        expect(screen.getByText(errorMessage).className).toContain('error');
+      });
     });
   });
 
@@ -177,12 +155,7 @@ describe('<Checkbox />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
-
-      checkbox = element.getByLabelText('Employment Status');
-      button = element.getByRole('button');
+      render(formik);
     });
 
     afterEach(() => {
@@ -190,12 +163,12 @@ describe('<Checkbox />', () => {
     });
 
     test('FormControl is disabled', async () => {
-      expect(checkbox).toBeDisabled();
-      act(() => {
-        fireEvent.click(button);
+      expect(screen.getByLabelText('Employment Status')).toBeDisabled();
+      await user.click(screen.getByRole('button', {name: /submit/i}));
+
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledWith({ employed: false });
       });
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledWith({ employed: false });
     });
   });
 });

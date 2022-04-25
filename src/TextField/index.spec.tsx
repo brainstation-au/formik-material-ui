@@ -1,10 +1,9 @@
 import {
-  act,
-  fireEvent,
   render,
-  RenderResult,
-  waitFor,
+  screen,
+  waitFor
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Form, Formik } from 'formik';
 import React from 'react';
 import * as yup from 'yup';
@@ -14,9 +13,7 @@ describe('<TextField />', () => {
   const promise = Promise.resolve();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmitMock = jest.fn((_) => promise);
-  let element: RenderResult;
-  let textField: HTMLElement;
-  let button: HTMLElement;
+  const user = userEvent.setup();
 
   describe('basic usage', () => {
     type FormValues = { name: string };
@@ -44,12 +41,7 @@ describe('<TextField />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
-
-      textField = element.getByLabelText('Full Name');
-      button = element.getByRole('button');
+      render(formik);
     });
 
     afterEach(() => {
@@ -57,25 +49,22 @@ describe('<TextField />', () => {
     });
 
     test('text field renders input with type text', () => {
+      const textField = screen.getByLabelText('Full Name');
       expect(textField.getAttribute('type')).toBe('text');
       expect(textField).toHaveValue('');
     });
 
     test('text field renders helper text', () => {
-      expect(element.getByText('I am here to help')).toBeTruthy();
+      expect(screen.getByText('I am here to help')).toBeTruthy();
     });
 
     test('takes input and Fomik picks it up', async () => {
-      act(() => {
-        fireEvent.change(textField, { target: { value: 'Wasim Akram' } });
+      await user.type(screen.getByLabelText(/full name/i), 'Wasim Akram');
+      await user.click(screen.getByRole('button', {name: /submit/i}));
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith({ name: 'Wasim Akram' });
       });
-      act(() => {
-        fireEvent.click(button);
-      });
-
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith({ name: 'Wasim Akram' });
     });
   });
 
@@ -94,7 +83,7 @@ describe('<TextField />', () => {
         >
           {({ submitForm }) => (
             <Form>
-              <TextField name="name" label="Full Name" id="full-name" />
+              <TextField name="name" label="Full Name" id="full-name" required />
               <button type="button" onClick={submitForm}>
                 Submit
               </button>
@@ -103,26 +92,30 @@ describe('<TextField />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
-
-      textField = element.getByLabelText('Full Name');
-      button = element.getByRole('button');
+      render(<div>
+        <div className="foo">bar</div>
+        {formik}
+      </div>);
     });
 
     afterEach(() => {
       onSubmitMock.mockClear();
     });
 
-    test('formik is controlling validation state', async () => {
-      act(() => {
-        fireEvent.click(button);
+    test('formik prevents submission on validation error', async () => {
+      await user.click(screen.getByRole('button', {name: /submit/i}));
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(0);
+        expect(screen.getByText(/required/i)).toBeInTheDocument();
       });
+    });
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(0);
-      expect(element.getByText('Required')).toBeTruthy();
+    test('formik updates field states on validation', async () => {
+      await user.click(screen.getByLabelText(/full name/i));
+      await user.click(screen.getByText(/bar/i));
+      await waitFor(() => {
+        expect(screen.getByText(/required/i)).toBeInTheDocument();
+      });
     });
   });
 });

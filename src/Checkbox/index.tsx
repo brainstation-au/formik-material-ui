@@ -7,7 +7,7 @@ import {
   Checkbox as MuiCheckbox,
   CheckboxProps as MuiCheckboxProps,
   FormControlLabelProps,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useField } from 'formik';
 
 export interface CheckboxProps {
