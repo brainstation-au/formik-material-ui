@@ -28,7 +28,6 @@
     "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.6.2",
     "@mui/material": "^5.6.2",
-    "@mui/x-date-pickers": "^5.0.0-alpha.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^14.1.1",
@@ -53,14 +52,11 @@
   "peerDependencies": {
     "@mui/icons-material": ">= 5",
     "@mui/material": ">= 5",
-    "@mui/x-date-pickers": ">= 5",
     "formik": ">= 2",
     "react": ">= 17",
     "react-dom": ">= 17"
   },
   "dependencies": {
-    "@date-io/moment": "^2.13.1",
-    "moment": "^2.29.3",
     "runtypes": "^6.5.1"
   }
 }
