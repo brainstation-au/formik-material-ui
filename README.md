@@ -20,6 +20,7 @@ Note: At the point I'm writing this, [Formik has a type deprecated by React 18](
 
 ## Version-1 Changelog
 
+- Update from Material UI 4 to Material UI 5.
 - The `DatePicker` component has been taken off, as there are lot of breaking changes going on from Material UI side.
 - No breaking change in any other component.
 
