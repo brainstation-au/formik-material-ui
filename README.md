@@ -8,10 +8,11 @@ Each of the components in this package uses [useField hook from formik](https://
 
 ```json
 {
-  "@material-ui/core": ">= 4",
+  "@mui/icons-material": ">= 5",
+  "@mui/material": ">= 5",
   "formik": ">= 2",
-  "react": ">= 16.8",
-  "react-dom": ">= 16.8"
+  "react": ">= 17",
+  "react-dom": ">= 17"
 }
 ```
 
