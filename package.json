@@ -1,6 +1,6 @@
 {
   "name": "@brainstationau/formik-material-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Material UI form-components with formik",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
