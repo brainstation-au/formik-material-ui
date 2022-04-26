@@ -10,7 +10,7 @@ import {
   Radio,
   RadioGroup as MuiRadioGroup,
   RadioProps,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useField } from 'formik';
 import React, { FunctionComponent } from 'react';
 

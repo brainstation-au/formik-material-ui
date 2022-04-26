@@ -1,10 +1,10 @@
 import {
-  act,
   fireEvent,
   render,
-  RenderResult,
+  screen,
   waitFor,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Form, Formik } from 'formik';
 import React from 'react';
 import * as yup from 'yup';
@@ -12,8 +12,8 @@ import { NativeSelect, NativeSelectOption } from '.';
 
 describe('<NativeSelect />', () => {
   const promise = Promise.resolve();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmitMock = jest.fn((_) => promise);
-  let element: RenderResult;
   let selectInput: HTMLElement;
   let button: HTMLElement;
   type FormValues = { fruit: string };
@@ -32,6 +32,7 @@ describe('<NativeSelect />', () => {
       value: 'pear',
     },
   ];
+  const user = userEvent.setup();
 
   describe('basic usage', () => {
     beforeEach(() => {
@@ -55,12 +56,10 @@ describe('<NativeSelect />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
+      render(formik);
 
-      selectInput = element.getByLabelText('Favourite Fruit');
-      button = element.getByRole('button');
+      selectInput = screen.getByLabelText('Favourite Fruit');
+      button = screen.getByRole('button');
     });
 
     afterEach(() => {
@@ -68,43 +67,34 @@ describe('<NativeSelect />', () => {
     });
 
     test('form submission with initial state', async () => {
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith(initialValue);
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith(initialValue);
+      });
     });
 
     test('change selection and submit the form', async () => {
-      act(() => {
-        fireEvent.change(selectInput, { target: { value: 'pear' } });
-      });
-      act(() => {
-        fireEvent.click(button);
-      });
+      fireEvent.change(selectInput, { target: { value: 'pear' } });
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith({ fruit: 'pear' });
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith({ fruit: 'pear' });
+      });
     });
 
     test('check the box twice and submit the form', async () => {
-      act(() => {
-        fireEvent.change(selectInput, { target: { value: 'pear' } });
-      });
-      act(() => {
-        fireEvent.change(selectInput, { target: { value: 'orange' } });
-      });
-      act(() => {
-        fireEvent.click(button);
-      });
+      fireEvent.change(selectInput, { target: { value: 'pear' } });
+      fireEvent.change(selectInput, { target: { value: 'orange' } });
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(selectInput).not.toBeChecked();
-      expect(onSubmitMock).toHaveBeenCalledTimes(1);
-      expect(onSubmitMock).toHaveBeenCalledWith({ fruit: 'orange' });
+      await waitFor(() => {
+        expect(selectInput).not.toBeChecked();
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith({ fruit: 'orange' });
+      });
     });
   });
 
@@ -138,13 +128,11 @@ describe('<NativeSelect />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
+      render(formik);
 
-      selectInput = element.getByLabelText('Favourite Fruit');
-      helperText = element.getByText(defaultHelpMessage);
-      button = element.getByRole('button');
+      selectInput = screen.getByLabelText('Favourite Fruit');
+      helperText = screen.getByText(defaultHelpMessage);
+      button = screen.getByRole('button');
     });
 
     afterEach(() => {
@@ -156,14 +144,13 @@ describe('<NativeSelect />', () => {
     });
 
     test('submit form without checking the box', async () => {
-      act(() => {
-        fireEvent.click(button);
-      });
+      await user.click(button);
 
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledTimes(0);
-      expect(helperText).toContainHTML(errorMessage);
-      expect(helperText?.className).toContain('error');
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledTimes(0);
+        expect(helperText).toContainHTML(errorMessage);
+        expect(helperText?.className).toContain('error');
+      });
     });
   });
 
@@ -190,12 +177,10 @@ describe('<NativeSelect />', () => {
         </Formik>
       );
 
-      act(() => {
-        element = render(formik);
-      });
+      render(formik);
 
-      selectInput = element.getByLabelText('Favourite Fruit');
-      button = element.getByRole('button');
+      selectInput = screen.getByLabelText('Favourite Fruit');
+      button = screen.getByRole('button');
     });
 
     afterEach(() => {
@@ -204,11 +189,10 @@ describe('<NativeSelect />', () => {
 
     test('FormControl is disabled', async () => {
       expect(selectInput).toBeDisabled();
-      act(() => {
-        fireEvent.click(button);
+      await user.click(button);
+      await waitFor(() => {
+        expect(onSubmitMock).toHaveBeenCalledWith(initialValue);
       });
-      await waitFor(() => promise);
-      expect(onSubmitMock).toHaveBeenCalledWith(initialValue);
     });
   });
 });

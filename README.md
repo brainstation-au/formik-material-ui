@@ -8,12 +8,20 @@ Each of the components in this package uses [useField hook from formik](https://
 
 ```json
 {
-  "@material-ui/core": ">= 4",
+  "@mui/icons-material": ">= 5",
+  "@mui/material": ">= 5",
   "formik": ">= 2",
-  "react": ">= 16.8",
-  "react-dom": ">= 16.8"
+  "react": ">= 17",
+  "react-dom": ">= 17"
 }
 ```
+
+Note: At the point I'm writing this, [Formik has a type deprecated by React 18](https://github.com/jaredpalmer/formik/issues/3546).
+
+## Version-1 Changelog
+
+- The `DatePicker` component has been taken off, as there are lot of breaking changes going on from Material UI side.
+- No breaking change in any other component.
 
 ## Demo
 

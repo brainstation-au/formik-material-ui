@@ -10,7 +10,7 @@ import {
   FormLabelProps,
   FormGroupProps,
   FormControlLabelProps,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useField } from 'formik';
 import React, { FunctionComponent } from 'react';
 
