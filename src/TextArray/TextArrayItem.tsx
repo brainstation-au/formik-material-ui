@@ -2,16 +2,9 @@ import {
   FormControl,
   Input,
   InputProps,
-  makeStyles
-} from '@material-ui/core';
+} from '@mui/material';
 import { useField } from 'formik';
 import React, { FunctionComponent } from 'react';
-
-const useStyles = makeStyles({
-  input: {
-    flex: 1,
-  },
-});
 
 export type TextInputProps = Omit<
     InputProps,
@@ -40,13 +33,12 @@ export const TextArrayItem: FunctionComponent<TextArrayItemProps> = ({
   name,
   ...inputProps
 }) => {
-  const classes = useStyles();
   const [field, meta] = useField(`${name}[${index}]`);
   const inputId = `${id || name}-${index}`;
   const formError = meta.touched && !!meta.error;
 
   return (
-    <FormControl error={formError} className={classes.input}>
+    <FormControl error={formError} sx={{ flex: 1 }}>
       <Input id={inputId} {...inputProps} {...field} />
     </FormControl>
   );

@@ -5,9 +5,9 @@ import {
   FormHelperText,
   IconButton,
   InputLabel
-} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useField } from 'formik';
 import React, { FunctionComponent } from 'react';
 import { Array, String } from 'runtypes';
